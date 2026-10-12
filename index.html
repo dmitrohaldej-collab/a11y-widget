@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Помічник доступності</title>
+<style>
+:root {
+  --blue: #164e9b;
+  --yellow: #ffd500;
+  --text: #172033;
+  --panel: #ffffff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+#a11y-launcher {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 999999;
+  width: 62px;
+  height: 62px;
+  border: 3px solid white;
+  border-radius: 50%;
+  background: var(--blue);
+  color: white;
+  font-size: 32px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px #0005;
+  outline-offset: 4px;
+}
+#a11y-launcher::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: -2px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--yellow);
+  border: 2px solid white;
+}
+#a11y-panel {
+  position: fixed;
+  right: 16px;
+  bottom: 92px;
+  z-index: 999999;
+  width: min(340px, calc(100vw - 32px));
+  max-height: min(75vh, 600px);
+  overflow-y: auto;
+  background: var(--panel);
+  color: var(--text);
+  border: 2px solid var(--blue);
+  border-radius: 18px;
+  box-shadow: 0 8px 35px #0004;
+}
+#a11y-panel[hidden] { display: none; }
+.a11y-header {
+  padding: 19px;
+  color: white;
+  background: var(--blue);
+  border-bottom: 5px solid var(--yellow);
+}
+.a11y-header h2 {
+  font-size: 21px;
+  margin: 0 0 6px;
+}
+.a11y-header p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.a11y-content { padding: 15px; }
+.a11y-content h3 {
+  font-size: 15px;
+  margin: 3px 0 10px;
+}
+.a11y-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+.a11y-grid button, #a11y-reset {
+  min-height: 64px;
+  padding: 10px 7px;
+  border: 1px solid #c7d5e8;
+  border-radius: 10px;
+  background: #f3f7fc;
+  color: #17365f;
+  font-size: 14px;
+  line-height: 1.35;
+  cursor: pointer;
+}
+.a11y-grid button span {
+  display: block;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.a11y-grid button[aria-pressed="true"] {
+  background: #e3edff;
+  border: 2px solid var(--blue);
+}
+.a11y-grid button:hover, #a11y-reset:hover {
+  background: #fff4b5;
+}
+#a11y-reset {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 12px;
+  background: white;
+}
+#a11y-close {
+  float: right;
+  margin-top: -3px;
+  border: 1px solid white;
+  border-radius: 7px;
+  padding: 5px 9px;
+  color: white;
+  background: transparent;
+  cursor: pointer;
+}
+button:focus-visible {
+  outline: 3px solid #d18a00;
+  outline-offset: 3px;
+}
+html.a11y-gray { filter: grayscale(1); }
+html.a11y-links a {
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
+}
+html.a11y-contrast,
+html.a11y-contrast body {
+  background: #000 !important;
+  color: #fff !important;
+}
+html.a11y-contrast body * {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #ff0 !important;
+}
+html.a11y-contrast a {
+  color: #ff0 !important;
+}
+@media (max-width: 400px) {
+  #a11y-launcher { width: 56px; height: 56px; }
+  #a11y-panel { bottom: 84px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<button id="a11y-launcher" type="button"
+ aria-label="Відкрити помічник доступності"
+ aria-controls="a11y-panel" aria-expanded="false"
+ title="Помічник доступності">
+ ♿
+</button>
+
+<section id="a11y-panel" role="region"
+ aria-label="Налаштування доступності" hidden>
+  <header class="a11y-header">
+    <button id="a11y-close" type="button"
+      aria-label="Закрити панель">✕</button>
+    <h2>Помічник доступності</h2>
+    <p>Комфортний перегляд сайту для кожного</p>
+  </header>
+
+  <div class="a11y-content">
+    <h3>Налаштування відображення</h3>
+    <div class="a11y-grid">
+      <button type="button" data-action="larger"
+        aria-pressed="false">
+        <span>А+</span>Збільшити текст
+      </button>
+      <button type="button" data-action="smaller"
+        aria-pressed="false">
+        <span>А−</span>Зменшити текст
+      </button>
+      <button type="button" data-action="contrast"
+        aria-pressed="false">
+        <span>◐</span>Високий контраст
+      </button>
+      <button type="button" data-action="gray"
+        aria-pressed="false">
+        <span>◑</span>Чорно-білий режим
+      </button>
+      <button type="button" data-action="links"
+        aria-pressed="false">
+        <span>🔗</span>Підкреслити посилання
+      </button>
+      <button type="button" data-action="spacing"
+        aria-pressed="false">
+        <span>↔</span>Збільшити інтервали
+      </button>
+    </div>
+    <button id="a11y-reset" type="button">
+      ↺ Скинути всі налаштування
+    </button>
+  </div>
+</section>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const launcher = document.getElementById('a11y-launcher');
+  const panel = document.getElementById('a11y-panel');
+  const close = document.getElementById('a11y-close');
+  const reset = document.getElementById('a11y-reset');
+
+  let scale = 1;
+  let spacing = false;
+
+  const classes = {
+    contrast: 'a11y-contrast',
+    gray: 'a11y-gray',
+    links: 'a11y-links'
+  };
+
+  function openPanel(open) {
+    panel.hidden = !open;
+    launcher.setAttribute('aria-expanded', String(open));
+    if (open) close.focus();
+    else launcher.focus();
+  }
+
+  launcher.addEventListener('click', () => {
+    openPanel(panel.hidden);
+  });
+
+  close.addEventListener('click', () => openPanel(false));
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !panel.hidden) {
+      openPanel(false);
+    }
+  });
+
+  function updateScale() {
+    root.style.setProperty('--a11y-scale', scale);
+    root.style.fontSize = (scale * 100) + '%';
+  }
+
+  panel.addEventListener('click', event => {
+    const button = event.target.closest('[data-action]');
+    if (!button) return;
+
+    const action = button.dataset.action;
+
+    if (action === 'larger') {
+      scale = Math.min(1.5, +(scale + 0.1).toFixed(2));
+      updateScale();
+    } else if (action === 'smaller') {
+      scale = Math.max(0.8, +(scale - 0.1).toFixed(2));
+      updateScale();
+    } else if (classes[action]) {
+      root.classList.toggle(classes[action]);
+      button.setAttribute(
+        'aria-pressed',
+        String(root.classList.contains(classes[action]))
+      );
+    } else if (action === 'spacing') {
+      spacing = !spacing;
+      root.classList.toggle('a11y-spacing', spacing);
+      button.setAttribute('aria-pressed', String(spacing));
+    }
+
+    if (action === 'larger' || action === 'smaller') {
+      panel.querySelectorAll('[data-action="larger"], [data-action="smaller"]')
+        .forEach(b => b.setAttribute('aria-pressed', 'false'));
+    }
+  });
+
+  const spacingStyle = document.createElement('style');
+  spacingStyle.textContent = `
+    html.a11y-spacing body * {
+      letter-spacing: 0.06em !important;
+      word-spacing: 0.12em !important;
+      line-height: 1.8 !important;
+    }
+  `;
+  document.head.appendChild(spacingStyle);
+
+  reset.addEventListener('click', () => {
+    scale = 1;
+    spacing = false;
+    root.style.fontSize = '';
+    root.classList.remove(
+      'a11y-contrast', 'a11y-gray',
+      'a11y-links', 'a11y-spacing'
+    );
+    panel.querySelectorAll('[data-action]').forEach(button => {
+      button.setAttribute('aria-pressed', 'false');
+    });
+  });
+})();
+</script>
+</body>
+</html>
